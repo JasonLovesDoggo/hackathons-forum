@@ -1,7 +1,7 @@
 import { Colors, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 import { SlashCommand } from '../types.js'
 import { replyWithEmbed } from '../../utils.js'
-import { db, sql } from '@nextjs-forum/db/node'
+import { db, sql } from '@hackathons-forum/db/node'
 import { baseLog } from '../../log.js'
 
 const log = baseLog.extend('refresh-last-active')

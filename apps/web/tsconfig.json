@@ -1,16 +1,26 @@
 {
-  "extends": "@nextjs-forum/tsconfig/nextjs.json",
+  "extends": "@hackathons-forum/tsconfig/nextjs.json",
   "compilerOptions": {
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     },
     "strictNullChecks": true,
     "plugins": [
       {
         "name": "next"
       }
-    ]
+    ],
+    "jsx": "preserve"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

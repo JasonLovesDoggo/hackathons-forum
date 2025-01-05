@@ -4,7 +4,9 @@
   Next.js Discord Forum
 </h1>
 
-<p align="center">The Next.js Discord server indexed in the web</p>
+<p align="center">The Hackathons Canada Discord server indexed in the web</p>
+
+##### Note: this project was forked from [nextjs-forum](https://github.com/rafaelalmeidatk/nextjs-forum) and all associated credit belongs e
 
 ## Getting Started
 
@@ -23,24 +25,24 @@ If you are developing locally, you need to create `.env` files in both the `apps
 #### Project: `apps/web`
 
 | Name                   | Description                                                                                              | Required? |
-| ---------------------- | -------------------------------------------------------------------------------------------------------- | --------- |
+|------------------------|----------------------------------------------------------------------------------------------------------|-----------|
 | `DATABASE_URL`         | The read-only connection string to connect to the DB, used to query the posts and messages               | ✔️        |
 | `REVALIDATE_SECRET`    | The secret that allows remote revalidations to the app cache. This var should also be set in the bot app | ✔️        |
-| `NEXT_PUBLIC_BASE_URL` | The URL where the app is hosted                                                                          | ❌        |
+| `NEXT_PUBLIC_BASE_URL` | The URL where the app is hosted                                                                          | ❌         |
 
 #### Project: `apps/bot`
 
 | Name                     | Description                                                                                                             | Required? |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------------------- | --------- |
+|--------------------------|-------------------------------------------------------------------------------------------------------------------------|-----------|
 | `DISCORD_BOT_TOKEN`      | The token for the bot. If you don't have a bot yet, go to the bot project section for more details on how to create one | ✔️        |
 | `DISCORD_CLIENT_ID`      | Client ID of the bot app                                                                                                | ✔️        |
-| `DEV_GUILD_ID`           | The ID of the Discord server to register dev commands with `pnpm dev:register-commands`                                 | ❌        |
-| `PUBLIC_PROFILE_ROLE_ID` | The ID of the role to make Discord profiles public in the database                                                      | ❌        |
-| `HELPER_ROLE_ID`         | The ID of the role that allows for selecting answer on behalf of owner                                                  | ❌        |
-| `MODERATOR_ROLE_ID`      | The ID of the role to set moderator status in the database (also can select answer)                                     | ❌        |
-| `REGULAR_MEMBER_ROLE_ID` | The ID of the role to add to users when they reach the points milestone                                                 | ❌        |
+| `DEV_GUILD_ID`           | The ID of the Discord server to register dev commands with `pnpm dev:register-commands`                                 | ❌         |
+| `PUBLIC_PROFILE_ROLE_ID` | The ID of the role to make Discord profiles public in the database                                                      | ❌         |
+| `HELPER_ROLE_ID`         | The ID of the role that allows for selecting answer on behalf of owner                                                  | ❌         |
+| `MODERATOR_ROLE_ID`      | The ID of the role to set moderator status in the database (also can select answer)                                     | ❌         |
+| `REGULAR_MEMBER_ROLE_ID` | The ID of the role to add to users when they reach the points milestone                                                 | ❌         |
 | `INDEXABLE_CHANNEL_IDS`  | Comma-separated list of forum channels to index                                                                         | ✔️        |
-| `MOD_LOG_CHANNEL_ID`     | The ID of the channel to log things for mods                                                                            | ❌        |
+| `MOD_LOG_CHANNEL_ID`     | The ID of the channel to log things for mods                                                                            | ❌         |
 | `DATABASE_URL`           | The connection string to connect to the DB                                                                              | ✔️        |
 | `REVALIDATE_SECRET`      | The same secret from the `web` project                                                                                  | ✔️        |
 | `WEB_URL`                | The address of the web service, used to make the call to revalidate the cache                                           | ✔️        |
@@ -48,7 +50,7 @@ If you are developing locally, you need to create `.env` files in both the `apps
 #### Project: `packages/db` (only necessary if you plan to run migrations)
 
 | Name           | Description                                                                 | Required? |
-| -------------- | --------------------------------------------------------------------------- | --------- |
+|----------------|-----------------------------------------------------------------------------|-----------|
 | `DATABASE_URL` | The admin connection string to connect to the DB, used to modify the schema | ✔️        |
 
 ### Running the development projects
@@ -105,7 +107,7 @@ docker compose up
 And use this for the environment variable:
 
 ```sh
-DATABASE_URL='postgresql://nextjsuser:nextjspassword@localhost:5432/nextjsforum'
+DATABASE_URL='postgresql://hackathonsuser:hackathonspassword@localhost:5432/hackathonsforum'
 ```
 
 If for some reason you want to start the database from scratch you can use the following command (this will erase all the data!):

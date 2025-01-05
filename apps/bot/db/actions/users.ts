@@ -1,6 +1,6 @@
 import { GuildMember, User } from 'discord.js'
 import { baseLog } from '../../log.js'
-import { KyselyDB, TransactionDB, db, sql } from '@nextjs-forum/db/node'
+import { KyselyDB, TransactionDB, db, sql } from '@hackathons-forum/db/node'
 import { AnimalModule, Faker, en } from '@faker-js/faker'
 import { type CacheUser, usersCache } from '../../lib/cache.js'
 import { env } from '../../env.js'

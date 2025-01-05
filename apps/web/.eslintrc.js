@@ -1,4 +1,4 @@
 module.exports = {
   root: true,
-  extends: ['@nextjs-forum/custom'],
+  extends: ['@hackathons-forum/custom'],
 }

@@ -77,7 +77,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
               </a>
 
               <a
-                href="https://github.com/rafaelalmeidatk/nextjs-forum"
+                href="https://github.com/rafaelalmeidatk/hackathons-forum"
                 target="_blank"
                 rel="noopener"
                 aria-label="Github Repository"

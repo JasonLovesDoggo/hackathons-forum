@@ -1,6 +1,6 @@
 import { toHTML } from 'discord-markdown'
 import { load } from 'cheerio'
-import { db } from '@nextjs-forum/db/node'
+import { db } from '@hackathons-forum/db/node'
 import { getCanonicalPostUrl } from './urls'
 import { sanitizeText } from 'simple-markdown'
 import { cache } from 'react'

@@ -1,5 +1,5 @@
 {
-  "name": "@nextjs-forum/web",
+  "name": "@hackathons-forum/web",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@nextjs-forum/db": "workspace:*",
+    "@hackathons-forum/db": "workspace:*",
     "@vercel/analytics": "^1.2.2",
     "cheerio": "^1.0.0-rc.12",
     "discord-markdown": "^2.5.1",
@@ -24,11 +24,11 @@
     "tailwind-merge": "^2.2.2"
   },
   "devDependencies": {
-    "@nextjs-forum/eslint-config-custom": "workspace:*",
-    "@nextjs-forum/tsconfig": "workspace:*",
+    "@hackathons-forum/eslint-config-custom": "workspace:*",
+    "@hackathons-forum/tsconfig": "workspace:*",
     "@types/luxon": "^3.4.2",
     "@types/node": "^20.12.2",
-    "@types/react": "18.2.73",
+    "@types/react": "18.2.0",
     "@types/react-dom": "^18.2.23",
     "autoprefixer": "^10.4.19",
     "eslint": "8.57.0",

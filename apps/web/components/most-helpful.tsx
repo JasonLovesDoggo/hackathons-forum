@@ -1,6 +1,6 @@
-import { db } from '@nextjs-forum/db/node'
 import { CheckCircleSolidIcon } from '@/components/icons/check-circle-solid'
 import Link from 'next/link'
+import { db } from '@hackathons-forum/db/node'
 
 const getMostHelpfulUsers = async () => {
   return db
