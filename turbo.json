@@ -1,7 +1,12 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
-  "globalEnv": ["DATABASE_URL", "REVALIDATE_SECRET", "NEXT_PUBLIC_BASE_URL"],
+  "globalEnv": [
+    "DATABASE_URL",
+    "REVALIDATE_SECRET",
+    "NEXT_PUBLIC_BASE_URL",
+    "NEXT_PUBLIC_GUILD_ID"
+  ],
   "pipeline": {
     "dev": { "cache": false },
     "start": { "cache": false },

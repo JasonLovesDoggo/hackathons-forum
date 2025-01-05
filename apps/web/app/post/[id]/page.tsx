@@ -273,7 +273,7 @@ const Post = async ({ params }: PostProps) => {
             </div>
 
             <a
-              href={`https://discord.com/channels/752553802359505017/${post.snowflakeId}/${post.snowflakeId}`}
+              href={`https://discord.com/channels/${process.env.NEXT_PUBLIC_GUILD_ID}/${post.snowflakeId}/${post.snowflakeId}`}
               className="shrink-0 w-fit px-4 py-1.5 font-semibold text-white border-neutral-700 border rounded hover:bg-neutral-700 hover:no-underline transition-colors"
               target="_blank"
               rel="noopener noreferrer"
