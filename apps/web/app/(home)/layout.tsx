@@ -14,11 +14,11 @@ export default function HomeLayout({ children }: HomeLayoutProps) {
           <div className="flex-1 flex flex-col px-4 space-y-4 z-10 text-center lg:text-left">
             <h2 className="font-semibold text-5xl lg:max-w-2xl leading-[1.1]">
               <Balancer ratio={0.75}>
-                The Next.js Discord server indexed in the web
+                The Hackathons Canada Discord server indexed in the web
               </Balancer>
             </h2>
             <a
-              href="https://nextjs.org/discord"
+              href="https://discord.gg/wp42amwcWy" /*todo: switch to a hackathonscanada.com/discord url */
               target="_blank"
               rel="noopener"
               className="mx-auto text-xl text-white w-fit hover:opacity-80 hover:no-underline transition-opacity lg:mx-0"

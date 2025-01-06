@@ -3,11 +3,11 @@ import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 
 import './globals.css'
-import { GitHubIcon } from '../components/icons/github'
-import { NextIcon } from '../components/icons/next'
-import { DiscordIcon } from '../components/icons/discord'
+import { GitHubIcon } from '@/components/icons/github'
+import { NextIcon } from '@/components/icons/next'
+import { DiscordIcon } from '@/components/icons/discord'
 import { Metadata } from 'next'
-import { getBaseUrl } from '../utils/urls'
+import { getBaseUrl } from '@/utils/urls'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -50,7 +50,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
         <header className="border-b border-neutral-700">
           <div className="container max-w-7xl flex mx-auto px-4 py-6 justify-between items-center">
             <h1 aria-hidden="true" className="sr-only">
-              Next.js Discord
+              Hackathons Canada Discord
             </h1>
 
             <a
@@ -67,7 +67,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
 
             <div className="flex space-x-5">
               <a
-                href="https://nextjs.org/discord"
+                href="https://discord.gg/wp42amwcWy" /*todo: switch to a hackathonscanada.com/discord url */
                 target="_blank"
                 rel="noopener"
                 aria-label="Discord Server Invite"
