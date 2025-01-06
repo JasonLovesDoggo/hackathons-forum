@@ -17,27 +17,27 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
   title: {
-    default: 'Next.js Discord Forum',
-    template: '%s | Next.js Discord Forum',
+    default: 'Hackathons Canada Discord Forum',
+    template: '%s | Hackathons Canada Discord Forum',
   },
-  description: 'The web version of the Next.js Discord server',
+  description: 'The web version of the Hackathons Canada Discord server',
   alternates: {
     canonical: getBaseUrl(),
   },
   openGraph: {
     title: {
-      default: 'Next.js Discord Forum',
-      template: '%s | Next.js Discord Forum',
+      default: 'Hackathons Canada Discord Forum',
+      template: '%s | Hackathons Canada Discord Forum',
     },
-    description: 'The web version of the Next.js Discord server',
+    description: 'The web version of the Hackathons Canada Discord server',
     type: 'website',
     url: getBaseUrl(),
-    siteName: 'Next.js Discord Forum',
+    siteName: 'Hackathons Canada Discord Forum',
   },
   twitter: {
     card: 'summary',
-    title: 'Next.js Discord Forum',
-    description: 'The web version of the Next.js Discord server',
+    title: 'Hackathons Canada Discord Forum',
+    description: 'The web version of the Hackathons Canada Discord server',
   },
 }
 

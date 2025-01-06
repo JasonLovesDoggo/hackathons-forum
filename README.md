@@ -1,7 +1,7 @@
 <h1 align="center">
-  <img src="https://camo.githubusercontent.com/f21f1fa29dfe5e1d0772b0efe2f43eca2f6dc14f2fede8d9cbef4a3a8210c91d/68747470733a2f2f6173736574732e76657263656c2e636f6d2f696d6167652f75706c6f61642f76313636323133303535392f6e6578746a732f49636f6e5f6c696768745f6261636b67726f756e642e706e67" alt="Next.js Logo" width="84">
+  <img src="https://camo.githubusercontent.com/f21f1fa29dfe5e1d0772b0efe2f43eca2f6dc14f2fede8d9cbef4a3a8210c91d/68747470733a2f2f6173736574732e76657263656c2e636f6d2f696d6167652f75706c6f61642f76313636323133303535392f6e6578746a732f49636f6e5f6c696768745f6261636b67726f756e642e706e67" alt="Hackathons Canada Logo" width="84">
   <br>
-  Next.js Discord Forum
+  Hackathons Canada Discord Forum
 </h1>
 
 <p align="center">The Hackathons Canada Discord server indexed in the web</p>
@@ -39,7 +39,7 @@ If you are developing locally, you need to create `.env` files in both the `apps
 | `DISCORD_BOT_TOKEN`       | The token for the bot. If you don't have a bot yet, go to the bot project section for more details on how to create one | ✔️        |
 | `DISCORD_CLIENT_ID`       | Client ID of the bot app                                                                                                | ✔️        |
 | `DEV_GUILD_ID`            | The ID of the Discord server to register dev commands with `pnpm dev:register-commands`                                 | ❌        |
-| `PRIVATE_PROFILE_ROLE_ID` | The ID of the role to make Discord profiles private in the database                                                     | ❌        |
+| `PRIVATE_PROFILE_ROLE_ID` | The ID of the role to make Discord profiles private in the database                                                     | ✔️        |
 | `HELPER_ROLE_ID`          | The ID of the role that allows for selecting answer on behalf of owner                                                  | ❌        |
 | `MODERATOR_ROLE_ID`       | The ID of the role to set moderator status in the database (also can select answer)                                     | ❌        |
 | `REGULAR_MEMBER_ROLE_ID`  | The ID of the role to add to users when they reach the points milestone                                                 | ❌        |

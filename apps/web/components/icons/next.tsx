@@ -1,8 +1,8 @@
 import { IconProps, IconSvg } from './base'
-
+// fixme! replace
 export const NextIcon = (props: IconProps) => (
   <IconSvg
-    aria-label="Next.js logotype"
+    aria-label="Hackathons Canada logotype"
     role="img"
     viewBox="0 0 394 79"
     {...props}
