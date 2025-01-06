@@ -1,5 +1,4 @@
 import {
-  AnyThreadChannel,
   APIEmbed,
   Channel,
   ChannelType,
@@ -23,31 +22,16 @@ const START_INDEXING_AFTER = 1686438000000
 
 export const isMessageInForumChannel = (
   channel: Channel,
-): channel is AnyThreadChannel<true> => {
+): channel is Channel => {
   return (
-    channel.isThread() &&
-    channel.parentId !== null &&
-    env.INDEXABLE_CHANNEL_IDS.includes(channel.parentId)
+    channel.type === ChannelType.GuildText &&
+    env.INDEXABLE_CHANNEL_IDS.includes(channel.id)
   )
 }
 
 export const isMessageSupported = (message: Message) => {
   const isIndexable = message.createdAt.getTime() > START_INDEXING_AFTER
   return !message.author.bot && !message.system && isIndexable
-}
-
-export const isThreadSupported = (thread: AnyThreadChannel<true>) => {
-  return (
-    thread.createdAt !== null &&
-    thread.createdAt.getTime() > START_INDEXING_AFTER
-  )
-}
-
-export const isThreadInForumChannel = (thread: AnyThreadChannel<true>) => {
-  return (
-    thread.parentId !== null &&
-    env.INDEXABLE_CHANNEL_IDS.includes(thread.parentId)
-  )
 }
 
 type Replyable = {
@@ -88,30 +72,15 @@ export const LockPostWithReason = async (
   interaction: ChatInputCommandInteraction,
   reason: string,
 ) => {
-  if (!interaction.channel?.isThread()) {
+  if (!interaction.channel) {
     await replyWithEmbedError(interaction, {
-      description: 'This command can only be used in a thread/forum post',
+      description: 'This command can only be used in a supported channel',
     })
     return
   }
 
-  const mainChannel = interaction.channel.parent
-  if (mainChannel && mainChannel.type === ChannelType.GuildForum) {
-    const lockedTagId = mainChannel.availableTags.find((t) =>
-      t.name.includes('Locked'),
-    )?.id
-
-    if (lockedTagId) {
-      const newTags = Array.from(
-        new Set([...interaction.channel.appliedTags, lockedTagId]),
-      )
-      interaction.channel.setAppliedTags(newTags)
-    }
-  }
-
   await interaction.reply({ content: 'Ok!', ephemeral: true })
 
-  await interaction.channel.setLocked(true)
   await interaction.channel.send({
     embeds: [
       {
@@ -160,26 +129,17 @@ export const checkInvalidAnswer = async (
 ) => {
   if (!interaction.channel || !isMessageInForumChannel(interaction.channel)) {
     await replyWithEmbedError(interaction, {
-      description: 'This command can only be used in a supported forum channel',
+      description: 'This command can only be used in a supported channel',
     })
 
     return
   }
-  const mainChannel = interaction.channel.parent
+  const mainChannel = interaction.channel
 
   if (!mainChannel) {
     await replyWithEmbedError(interaction, {
       description:
-        'Could not find the parent channel, please try again later. If this issue persists, contact a staff member',
-    })
-
-    return
-  }
-
-  if (mainChannel.type !== ChannelType.GuildForum) {
-    await interaction.reply({
-      ephemeral: true,
-      content: 'The parent channel is not a forum channel',
+        'Could not find the channel, please try again later. If this issue persists, contact a staff member',
     })
 
     return
@@ -196,6 +156,6 @@ export const checkInvalidAnswer = async (
 
     return
   }
-  const channel = interaction.channel as AnyThreadChannel<true>
+  const channel = interaction.channel
   return { channel, interactionMember, mainChannel }
 }
