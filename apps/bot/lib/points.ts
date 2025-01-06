@@ -6,7 +6,7 @@ import { getUserById } from '../db/actions/users.js'
 export const POINTS_REWARDS = {
   message: 2,
   question: 20,
-  answer: 50,
+  useful: 50,
 } as const
 export const REQUIRED_POINTS_FOR_ROLE = 1000
 

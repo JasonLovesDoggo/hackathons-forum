@@ -15,7 +15,7 @@ const getPostsByPage = async (pageNumber: number) => {
   return await db
     .selectFrom('posts')
     .innerJoin('users', 'users.snowflakeId', 'posts.userId')
-    .leftJoin('messages', 'messages.snowflakeId', 'posts.answerId')
+    .leftJoin('messages', 'messages.snowflakeId', 'posts.usefulMessageIds')
     .select([
       'posts.id',
       'posts.snowflakeId',
@@ -23,7 +23,7 @@ const getPostsByPage = async (pageNumber: number) => {
       'posts.createdAt',
       'users.username',
       'users.avatarUrl as userAvatar',
-      sql<boolean>`messages.id is not null`.as('hasAnswer'),
+      sql<boolean>`messages.id is not null`.as('hasUseful'),
       (eb) =>
         eb
           .selectFrom('messages')
@@ -75,7 +75,7 @@ export const PostsList = async ({ page }: PostsListProps) => {
             title={post.title}
             createdAt={post.createdAt}
             messagesCount={parseInt(post.messagesCount ?? '0', 10)}
-            hasAnswer={post.hasAnswer}
+            hasUseful={post.hasUseful}
             author={{ avatar: post.userAvatar, username: post.username }}
           />
         ))}

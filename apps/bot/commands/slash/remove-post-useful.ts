@@ -10,8 +10,8 @@ import { markMessageAsSolution } from '../../db/actions/messages.js'
 
 export const command: SlashCommand = {
   data: new SlashCommandBuilder()
-    .setName('remove-post-answer')
-    .setDescription('Removes the answer from a post')
+    .setName('remove-post-useful')
+    .setDescription('Removes the useful mark from a post')
     .setDMPermission(false)
     .setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
 
@@ -29,7 +29,7 @@ export const command: SlashCommand = {
     ) {
       await replyWithEmbedError(interaction, {
         description:
-          'Only the post author, helpers or moderators can remove an answer from a post',
+          'Only the post author, helpers or moderators can remove a useful mark from a post',
       })
 
       return
@@ -48,7 +48,7 @@ export const command: SlashCommand = {
 
     await replyWithEmbed(interaction, {
       title: '✅ Success!',
-      description: "This question's answer has been removed.",
+      description: "This post's useful mark has been removed.",
       color: Colors.Orange,
     })
 

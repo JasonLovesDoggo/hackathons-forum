@@ -4,7 +4,7 @@ import * as lockLowEffortPost from './lock-low-effort-post.js'
 import * as removePostAnswer from './remove-post-answer.js'
 import * as addRegularMemberRole from './add-regular-member-role.js'
 import * as revokeRegularMemberRole from './revoke-regular-member-role.js'
-import * as getAnswerCount from './get-answer-count.js'
+import * as getUsefulCount from './get-useful-count.js'
 
 export const slashCommands = [
   refreshAnswerCount.command,
@@ -13,5 +13,5 @@ export const slashCommands = [
   removePostAnswer.command,
   addRegularMemberRole.command,
   revokeRegularMemberRole.command,
-  getAnswerCount.command,
+  getUsefulCount.command,
 ]
