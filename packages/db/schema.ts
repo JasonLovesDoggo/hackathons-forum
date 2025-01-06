@@ -55,7 +55,7 @@ export interface Users {
   discriminator: string
   id: Generated<string>
   isModerator: Generated<boolean>
-  isPublic: Generated<boolean>
+  isPrivate: Generated<boolean>
   points: Generated<number>
   snowflakeId: string
   username: string

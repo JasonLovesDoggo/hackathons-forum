@@ -38,7 +38,7 @@ const getUserData = async (discordID: string) => {
       'username',
       'avatarUrl',
       'answersCount',
-      'isPublic',
+      'isPrivate',
       'joinedAt',
     ])
     .where('snowflakeId', '=', discordID)
@@ -99,7 +99,7 @@ export const generateMetadata = async ({
   params,
 }: UserProps): Promise<Metadata> => {
   const userData = await getUserData(params.discordID)
-  if (!userData || !userData.isPublic) {
+  if (!userData || !userData.isPrivate) {
     return notFound()
   }
   const title = userData.username
@@ -133,7 +133,7 @@ type UserProps = {
 
 const UserInfo = async ({ params }: UserProps) => {
   const userData = await getUserData(params.discordID)
-  if (!userData || !userData.isPublic) {
+  if (!userData || !userData.isPrivate) {
     return notFound()
   }
   const recentPosts = await getUserPosts(params.discordID)

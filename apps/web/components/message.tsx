@@ -16,7 +16,7 @@ type MessageProps = {
   author: {
     username: string
     avatarUrl: string
-    isPublic: boolean
+    isPrivate: boolean
     isOP: boolean
     isModerator: boolean
     userID: string
@@ -69,7 +69,7 @@ export const Message = ({
               {isFirstRow && (
                 <div className="flex items-center space-x-2">
                   <div className="overflow-hidden text-ellipsis whitespace-nowrap font-semibold">
-                    {author.isPublic ? (
+                    {author.isPrivate ? (
                       <Link
                         className="text-white opacity-90"
                         href={`/user/${author.userID}`}
@@ -80,8 +80,8 @@ export const Message = ({
                       <span className="opacity-50">{author.username}</span>
                     )}
 
-                    {!author.isPublic && (
-                      <i title="User's profile isn't public">
+                    {!author.isPrivate && (
+                      <i title="User's profile is private">
                         <IncognitoIcon className="pl-2" />
                       </i>
                     )}

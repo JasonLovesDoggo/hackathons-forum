@@ -7,7 +7,7 @@ export interface CacheUser {
   username: string
   discriminator: string
   avatarUrl: string
-  isPublic?: boolean
+  isPrivate?: boolean
   isModerator?: boolean
   joinedAt?: Date
 }

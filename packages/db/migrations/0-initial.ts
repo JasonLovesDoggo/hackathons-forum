@@ -9,7 +9,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('snowflakeId', SnowflakeDataType, (col) =>
       col.notNull().unique(),
     )
-    .addColumn('isPublic', 'boolean', (col) => col.notNull().defaultTo(false))
+    .addColumn('isPrivate', 'boolean', (col) => col.notNull().defaultTo(false))
     .addColumn('username', 'text', (col) => col.notNull())
     .addColumn('discriminator', 'varchar(4)', (col) => col.notNull())
     .addColumn('avatarUrl', 'text', (col) => col.notNull())

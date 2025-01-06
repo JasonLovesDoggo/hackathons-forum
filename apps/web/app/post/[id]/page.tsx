@@ -39,7 +39,7 @@ const getPost = async (snowflakeId: string) => {
       'posts.createdAt',
       'posts.answerId',
       'users.username',
-      'users.isPublic as userIsPublic',
+      'users.isPrivate as userisPrivate',
       'users.avatarUrl as userAvatar',
       'channels.name as channelName',
       'users.snowflakeId as userID',
@@ -67,7 +67,7 @@ const getPostMessage = async (postId: string) => {
       'users.id as authorId',
       'users.avatarUrl as authorAvatarUrl',
       'users.username as authorUsername',
-      'users.isPublic as userIsPublic',
+      'users.isPrivate as userisPrivate',
       'users.isModerator as userIsModerator',
       'users.snowflakeId as userID',
       sql<Attachment[]>`
@@ -102,7 +102,7 @@ const getMessages = async (postId: string) => {
       'users.id as authorId',
       'users.avatarUrl as authorAvatarUrl',
       'users.username as authorUsername',
-      'users.isPublic as userIsPublic',
+      'users.isPrivate as userisPrivate',
       'users.isModerator as userIsModerator',
       'users.snowflakeId as userID',
       sql<Attachment[]>`
@@ -261,7 +261,7 @@ const Post = async ({ params }: PostProps) => {
                 </div>
               )}
               <div>
-                {post.userIsPublic ? (
+                {post.userisPrivate ? (
                   <Link
                     className="text-white opacity-90"
                     href={`/user/${post.userID}`}
@@ -299,7 +299,7 @@ const Post = async ({ params }: PostProps) => {
                 author={{
                   username: postMessage.authorUsername,
                   avatarUrl: postMessage.authorAvatarUrl,
-                  isPublic: postMessage.userIsPublic,
+                  isPrivate: postMessage.userisPrivate,
                   isOP: true,
                   isModerator: postMessage.userIsModerator,
                   userID: postMessage.userID,
@@ -397,7 +397,7 @@ const Post = async ({ params }: PostProps) => {
                     author={{
                       username: message.authorUsername,
                       avatarUrl: message.authorAvatarUrl,
-                      isPublic: message.userIsPublic,
+                      isPrivate: message.userisPrivate,
                       isOP: postMessage
                         ? message.authorId === postMessage.authorId
                         : false,

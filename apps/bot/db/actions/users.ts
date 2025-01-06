@@ -26,9 +26,9 @@ const allowedAnimalTypes: Array<keyof AnimalModule> = [
 const userChangedCheck = (userId: string, user: CacheUser) => {
   const cachedUser = usersCache.get(userId)
   if (!cachedUser) return true
-  if (cachedUser.isPublic !== user.isPublic) return true
+  if (cachedUser.isPrivate !== user.isPrivate) return true
   if (cachedUser.isModerator !== user.isModerator) return true
-  if (user.isPublic) {
+  if (user.isPrivate) {
     if (cachedUser.username !== user.username) return true
     if (cachedUser.discriminator !== user.discriminator) return true
     if (cachedUser.avatarUrl !== user.avatarUrl) return true
@@ -37,14 +37,14 @@ const userChangedCheck = (userId: string, user: CacheUser) => {
 }
 
 export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
-  let isPublicProfile = false
+  let isPrivateProfile = false
   let isModerator = false
   let joinedAt = asGuildMember?.joinedAt
 
   if (asGuildMember) {
-    if (env.PUBLIC_PROFILE_ROLE_ID) {
-      isPublicProfile = asGuildMember.roles.cache.has(
-        env.PUBLIC_PROFILE_ROLE_ID,
+    if (env.PRIVATE_PROFILE_ROLE_ID) {
+      isPrivateProfile = asGuildMember.roles.cache.has(
+        env.PRIVATE_PROFILE_ROLE_ID,
       )
     }
     if (env.MODERATOR_ROLE_ID) {
@@ -62,12 +62,12 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
     username,
     discriminator,
     avatarUrl,
-    isPublic: isPublicProfile,
+    isPrivate: isPrivateProfile,
     isModerator,
   }
   if (!userChangedCheck(user.id, userCheck)) return
 
-  if (!isPublicProfile) {
+  if (!isPrivateProfile) {
     // The docs says its unlikely I need to create a new instance but I am afraid of using a single
     // instance while changing the seed and ending up with a race condition with another request
     const faker = new Faker({ locale: en })
@@ -83,7 +83,7 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
     .insertInto('users')
     .values({
       snowflakeId: user.id,
-      isPublic: isPublicProfile,
+      isPrivate: isPrivateProfile,
       isModerator,
       username,
       discriminator,
@@ -92,7 +92,7 @@ export const syncUser = async (user: User, asGuildMember?: GuildMember) => {
     })
     .onConflict((oc) =>
       oc.column('snowflakeId').doUpdateSet({
-        isPublic: isPublicProfile,
+        isPrivate: isPrivateProfile,
         isModerator,
         username,
         discriminator,

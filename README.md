@@ -34,20 +34,20 @@ If you are developing locally, you need to create `.env` files in both the `apps
 
 #### Project: `apps/bot`
 
-| Name                     | Description                                                                                                             | Required? |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------------------- | --------- |
-| `DISCORD_BOT_TOKEN`      | The token for the bot. If you don't have a bot yet, go to the bot project section for more details on how to create one | ✔️        |
-| `DISCORD_CLIENT_ID`      | Client ID of the bot app                                                                                                | ✔️        |
-| `DEV_GUILD_ID`           | The ID of the Discord server to register dev commands with `pnpm dev:register-commands`                                 | ❌        |
-| `PUBLIC_PROFILE_ROLE_ID` | The ID of the role to make Discord profiles public in the database                                                      | ❌        |
-| `HELPER_ROLE_ID`         | The ID of the role that allows for selecting answer on behalf of owner                                                  | ❌        |
-| `MODERATOR_ROLE_ID`      | The ID of the role to set moderator status in the database (also can select answer)                                     | ❌        |
-| `REGULAR_MEMBER_ROLE_ID` | The ID of the role to add to users when they reach the points milestone                                                 | ❌        |
-| `INDEXABLE_CHANNEL_IDS`  | Comma-separated list of forum channels to index                                                                         | ✔️        |
-| `MOD_LOG_CHANNEL_ID`     | The ID of the channel to log things for mods                                                                            | ❌        |
-| `DATABASE_URL`           | The connection string to connect to the DB                                                                              | ✔️        |
-| `REVALIDATE_SECRET`      | The same secret from the `web` project                                                                                  | ✔️        |
-| `WEB_URL`                | The address of the web service, used to make the call to revalidate the cache                                           | ✔️        |
+| Name                      | Description                                                                                                             | Required? |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------- | --------- |
+| `DISCORD_BOT_TOKEN`       | The token for the bot. If you don't have a bot yet, go to the bot project section for more details on how to create one | ✔️        |
+| `DISCORD_CLIENT_ID`       | Client ID of the bot app                                                                                                | ✔️        |
+| `DEV_GUILD_ID`            | The ID of the Discord server to register dev commands with `pnpm dev:register-commands`                                 | ❌        |
+| `PRIVATE_PROFILE_ROLE_ID` | The ID of the role to make Discord profiles private in the database                                                     | ❌        |
+| `HELPER_ROLE_ID`          | The ID of the role that allows for selecting answer on behalf of owner                                                  | ❌        |
+| `MODERATOR_ROLE_ID`       | The ID of the role to set moderator status in the database (also can select answer)                                     | ❌        |
+| `REGULAR_MEMBER_ROLE_ID`  | The ID of the role to add to users when they reach the points milestone                                                 | ❌        |
+| `INDEXABLE_CHANNEL_IDS`   | Comma-separated list of forum channels to index                                                                         | ✔️        |
+| `MOD_LOG_CHANNEL_ID`      | The ID of the channel to log things for mods                                                                            | ❌        |
+| `DATABASE_URL`            | The connection string to connect to the DB                                                                              | ✔️        |
+| `REVALIDATE_SECRET`       | The same secret from the `web` project                                                                                  | ✔️        |
+| `WEB_URL`                 | The address of the web service, used to make the call to revalidate the cache                                           | ✔️        |
 
 #### Project: `packages/db` (only necessary if you plan to run migrations)
 

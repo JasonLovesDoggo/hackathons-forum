@@ -15,7 +15,7 @@ export const env = createEnv({
     DISCORD_BOT_TOKEN: z.string(),
     DISCORD_CLIENT_ID: z.string(),
     DEV_GUILD_ID: z.string().optional(),
-    PUBLIC_PROFILE_ROLE_ID: z.string().optional(),
+    PRIVATE_PROFILE_ROLE_ID: z.string().optional(),
     MODERATOR_ROLE_ID: z.string().optional(),
     HELPER_ROLE_ID: z.string().optional(),
     REGULAR_MEMBER_ROLE_ID: z.string().optional(),
