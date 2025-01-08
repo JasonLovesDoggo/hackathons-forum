@@ -7,7 +7,7 @@ type PostProps = {
   title: string
   messagesCount: number
   createdAt: Date
-  hasAnswer: boolean
+  hasUseful: boolean
   author: {
     username: string
     avatar: string
@@ -19,11 +19,11 @@ export const Post = ({
   title,
   messagesCount,
   createdAt,
-  hasAnswer,
+  hasUseful,
   author,
 }: PostProps) => {
   const createdAtTimes = buildPostTimeValues(createdAt)
-  const borderColor = hasAnswer ? 'border-green-700' : 'border-neutral-700'
+  const borderColor = hasUseful ? 'border-green-700' : 'border-neutral-700'
 
   return (
     <Link href={`/post/${id}`} className="block text-white no-underline">
@@ -46,10 +46,10 @@ export const Post = ({
               {createdAtTimes.text}
             </time>{' '}
             · {messagesCount} {plur('Message', messagesCount)}
-            {hasAnswer && (
+            {hasUseful && (
               <span>
                 {' '}
-                · <span className="font-semibold text-green-500">Answered</span>
+                · <span className="font-semibold text-green-500">Useful</span>
               </span>
             )}
           </div>

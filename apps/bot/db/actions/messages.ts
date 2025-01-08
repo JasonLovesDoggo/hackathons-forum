@@ -93,3 +93,68 @@ export const deleteMessage = async (
     }
   })
 }
+
+export const markMessageAsUseful = async (
+  messageId: string | null,
+  postId: string,
+) => {
+  await db.transaction().execute(async (trx) => {
+    const currentUsefulMessages = await trx
+      .selectFrom('posts')
+      .innerJoin('messages', 'messages.snowflakeId', 'posts.usefulMessageIds')
+      .select('messages.userId')
+      .where('posts.snowflakeId', '=', postId)
+      .execute()
+
+    for (const currentUsefulMessage of currentUsefulMessages) {
+      await trx
+        .updateTable('users')
+        .set((eb) => ({
+          usefulMessagesCount: sql`greatest(${eb.ref('usefulMessagesCount')} - 1, 0)`,
+        }))
+        .where('snowflakeId', '=', currentUsefulMessage.userId)
+        .execute()
+
+      await removePointsFromUser(currentUsefulMessage.userId, 'useful', trx)
+    }
+
+    if (messageId === null) {
+      await trx
+        .updateTable('posts')
+        .set({ usefulMessageIds: null })
+        .where('snowflakeId', '=', postId)
+        .executeTakeFirst()
+
+      await updatePostLastActive(postId, trx)
+
+      return
+    }
+
+    const newUsefulMessage = await trx
+      .selectFrom('messages')
+      .select('userId')
+      .where('snowflakeId', '=', messageId)
+      .executeTakeFirst()
+
+    if (newUsefulMessage) {
+      await trx
+        .updateTable('posts')
+        .set((eb) => ({
+          usefulMessageIds: sql`array_append(${eb.ref('usefulMessageIds')}, ${messageId})`,
+        }))
+        .where('snowflakeId', '=', postId)
+        .executeTakeFirst()
+
+      await trx
+        .updateTable('users')
+        .set((eb) => ({
+          usefulMessagesCount: sql`${eb.ref('usefulMessagesCount')} + 1`,
+        }))
+        .where('snowflakeId', '=', newUsefulMessage.userId)
+        .execute()
+
+      await addPointsToUser(newUsefulMessage.userId, 'useful', trx)
+      await updatePostLastActive(postId, trx)
+    }
+  })
+}
