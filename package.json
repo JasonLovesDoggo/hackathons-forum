@@ -9,9 +9,9 @@
     "start:bot": "turbo run start --filter=bot",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "migrate": "pnpm --filter=@hackathons-forum/db migrate",
-    "register-commands": "pnpm --filter=@hackathons-forum/bot register-commands",
-    "dev:register-commands": "pnpm --filter=@hackathons-forum/bot dev:register-commands",
+    "migrate": "bun --filter=@hackathons-forum/db migrate",
+    "register-commands": "bun --filter=@hackathons-forum/bot register-commands",
+    "dev:register-commands": "bun --filter=@hackathons-forum/bot dev:register-commands",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky install"
   },
@@ -23,8 +23,7 @@
     "turbo": "^1.11.2"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "pnpm": ">=8.11.0"
+    "node": ">=18.0.0"
   },
   "lint-staged": {
     "*.{js,ts,tsx,md,json}": "prettier --write"
@@ -32,5 +31,8 @@
   "resolutions": {
     "@types/react": "18.2.15"
   },
-  "packageManager": "pnpm@9.10.0"
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ]
 }

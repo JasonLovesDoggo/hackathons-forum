@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "build": "tsc --build",
-    "migrate": "NODE_OPTIONS='--loader ts-node/esm' ts-node ./migrate.ts",
-    "migrate:down": "MIGRATE_OP=down NODE_OPTIONS='--loader ts-node/esm' ts-node ./migrate.ts",
-    "migrate:list": "MIGRATE_OP=list NODE_OPTIONS='--loader ts-node/esm' ts-node ./migrate.ts",
+    "migrate": "bun ./migrate.ts",
+    "migrate:down": "cross-env MIGRATE_OP=down bun ./migrate.ts",
+    "migrate:list": "cross-env MIGRATE_OP=list bun ./migrate.ts",
     "db-codegen": "kysely-codegen --dialect postgres --out-file ./schema.ts",
     "lint": "eslint ."
   },
@@ -29,7 +29,7 @@
     "@types/pg": "^8.11.4",
     "dotenv": "^16.4.5",
     "kysely-codegen": "^0.14.2",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.3",
+    "cross-env": "^7.0.3"
   }
 }
