@@ -7,9 +7,13 @@
     "NEXT_PUBLIC_BASE_URL",
     "NEXT_PUBLIC_GUILD_ID"
   ],
-  "pipeline": {
-    "dev": { "cache": false },
-    "start": { "cache": false },
+  "tasks": {
+    "dev": {
+      "cache": false
+    },
+    "start": {
+      "cache": false
+    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["build/**", ".next/**"]
