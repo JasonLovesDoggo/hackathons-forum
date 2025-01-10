@@ -22,6 +22,13 @@ export interface Channels {
   snowflakeId: string
   topic: string
   type: number
+  categoryId: string | null
+}
+
+export interface Categories {
+  id: Generated<string>
+  name: string
+  description: string
 }
 
 export interface Messages {
@@ -65,6 +72,7 @@ export interface Users {
 export interface DB {
   attachments: Attachments
   channels: Channels
+  categories: Categories
   messages: Messages
   posts: Posts
   users: Users

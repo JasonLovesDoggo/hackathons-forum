@@ -1,5 +1,4 @@
 import {
-  AnyThreadChannel,
   APIEmbed,
   Channel,
   ChannelType,
@@ -21,13 +20,13 @@ import { unindexPost } from './db/actions/posts.js'
 
 const START_INDEXING_AFTER = 1686438000000
 
-export const isMessageInForumChannel = (
+export const isMessageInCategoryChannel = (
   channel: Channel,
-): channel is AnyThreadChannel<true> => {
+): channel is Channel => {
   return (
-    channel.isThread() &&
+    channel.isTextBased() &&
     channel.parentId !== null &&
-    env.INDEXABLE_CHANNEL_IDS.includes(channel.parentId)
+    env.INDEXABLE_CATEGORY_IDS.includes(channel.parentId)
   )
 }
 
@@ -36,17 +35,17 @@ export const isMessageSupported = (message: Message) => {
   return !message.author.bot && !message.system && isIndexable
 }
 
-export const isThreadSupported = (thread: AnyThreadChannel<true>) => {
+export const isThreadSupported = (channel: Channel) => {
   return (
-    thread.createdAt !== null &&
-    thread.createdAt.getTime() > START_INDEXING_AFTER
+    channel.createdAt !== null &&
+    channel.createdAt.getTime() > START_INDEXING_AFTER
   )
 }
 
-export const isThreadInForumChannel = (thread: AnyThreadChannel<true>) => {
+export const isThreadInForumChannel = (channel: Channel) => {
   return (
-    thread.parentId !== null &&
-    env.INDEXABLE_CHANNEL_IDS.includes(thread.parentId)
+    channel.parentId !== null &&
+    env.INDEXABLE_CATEGORY_IDS.includes(channel.parentId)
   )
 }
 
@@ -158,7 +157,7 @@ export const checkInvalidAnswer = async (
     | ChatInputCommandInteraction
     | MessageContextMenuCommandInteraction,
 ) => {
-  if (!interaction.channel || !isMessageInForumChannel(interaction.channel)) {
+  if (!interaction.channel || !isMessageInCategoryChannel(interaction.channel)) {
     await replyWithEmbedError(interaction, {
       description: 'This command can only be used in a supported forum channel',
     })
@@ -196,6 +195,6 @@ export const checkInvalidAnswer = async (
 
     return
   }
-  const channel = interaction.channel as AnyThreadChannel<true>
+  const channel = interaction.channel
   return { channel, interactionMember, mainChannel }
 }
