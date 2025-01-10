@@ -9,11 +9,11 @@ const getMostHelpfulUsers = async () => {
       'id',
       'username',
       'avatarUrl',
-      'answersCount',
+      'usefulMessagesCount',
       'isPrivate',
       'snowflakeId as userID',
     ])
-    .orderBy('answersCount', 'desc')
+    .orderBy('usefulMessagesCount', 'desc')
     .orderBy('id', 'desc')
     .limit(15)
     .execute()
@@ -50,7 +50,7 @@ export const MostHelpful = async () => {
             </div>
             <div className="flex items-center space-x-1 opacity-90">
               <CheckCircleSolidIcon size={5} />
-              <span className="text-sm ">{user.answersCount}</span>
+              <span className="text-sm ">{user.usefulMessagesCount}</span>
             </div>
           </div>
         ))}

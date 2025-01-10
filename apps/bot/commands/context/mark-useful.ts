@@ -14,13 +14,13 @@ import {
   replyWithEmbed,
   replyWithEmbedError,
 } from '../../utils.js'
-import { markMessageAsSolution } from '../../db/actions/messages.js'
+import { markMessageAsUseful } from '../../db/actions/messages.js'
 import { env } from '../../env.js'
 import { tryToSetRegularMemberRole } from '../../lib/points.js'
 
 export const command: ContextMenuCommand = {
   data: new ContextMenuCommandBuilder()
-    .setName('Mark Solution')
+    .setName('Mark Useful')
     .setDMPermission(false)
     .setDefaultMemberPermissions(PermissionFlagsBits.SendMessages)
     .setType(ApplicationCommandType.Message),
@@ -40,7 +40,6 @@ export const command: ContextMenuCommand = {
     const { channel, interactionMember, mainChannel } = isValidAnswer
 
     if (
-      channel.ownerId !== interaction.user.id &&
       !interactionMember.permissions.has(PermissionFlagsBits.ManageMessages) &&
       (env.HELPER_ROLE_ID
         ? !interactionMember.roles.cache.has(env.HELPER_ROLE_ID)
@@ -48,7 +47,7 @@ export const command: ContextMenuCommand = {
     ) {
       await replyWithEmbedError(interaction, {
         description:
-          'Only the post author, helpers or moderators can mark a message as the answer',
+          'Only helpers or moderators can mark a message as useful',
       })
 
       return
@@ -57,13 +56,21 @@ export const command: ContextMenuCommand = {
     if (interaction.targetId === interaction.channelId) {
       await replyWithEmbedError(interaction, {
         description:
-          "You can't mark the post itself as the answer. If you figured out the issue by yourself, please send it as a separate message and mark it as the answer",
+          "You can't mark the post itself as useful. If you figured out the issue by yourself, please send it as a separate message and mark it as useful",
       })
 
       return
     }
 
-    await markMessageAsSolution(
+    if (interaction.targetMessage.author.id === interaction.user.id) {
+      await replyWithEmbedError(interaction, {
+        description: "You can't mark your own message as useful",
+      })
+
+      return
+    }
+
+    await markMessageAsUseful(
       interaction.targetMessage.id,
       interaction.channelId,
     )
@@ -89,11 +96,11 @@ export const command: ContextMenuCommand = {
     await replyWithEmbed(interaction, {
       title: '✅ Success!',
       description:
-        'This question has been marked as answered! If you have any other questions, feel free to create another post',
+        'This message has been marked as useful! If you have any other questions, feel free to create another post',
       color: Colors.Green,
       fields: [
         {
-          name: 'Jump to answer',
+          name: 'Jump to Useful',
           value: `[Click here](${interaction.targetMessage.url})`,
           inline: true,
         },
@@ -121,7 +128,7 @@ export const command: ContextMenuCommand = {
                 {
                   type: ComponentType.Button,
                   style: ButtonStyle.Link,
-                  label: 'Jump to Answer',
+                  label: 'Jump to Useful',
                   url: interaction.targetMessage.url,
                 },
               ],
@@ -130,23 +137,6 @@ export const command: ContextMenuCommand = {
         })
       } catch (err) {
         console.error('Failed to update instructions message:', err)
-      }
-    }
-
-    // if the message author is the post creator, notify mods to ensure its a genuine solution
-    if (
-      interaction.targetMessage.author.id === channel.ownerId &&
-      interaction.user.id === channel.ownerId
-    ) {
-      if (env.MOD_LOG_CHANNEL_ID) {
-        const modLogChannel = interaction.client.channels.cache.get(
-          env.MOD_LOG_CHANNEL_ID,
-        )
-        if (!modLogChannel?.isTextBased()) return
-
-        await modLogChannel.send({
-          content: `OP self marked their message: ${interaction.targetMessage.url}`,
-        })
       }
     }
   },

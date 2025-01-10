@@ -1,3 +1,3 @@
-import * as markAnswer from './mark-answer.js'
+import * as markUseful from './mark-useful.js'
 
-export const contextMenuCommands = [markAnswer.command]
+export const contextMenuCommands = [markUseful.command]

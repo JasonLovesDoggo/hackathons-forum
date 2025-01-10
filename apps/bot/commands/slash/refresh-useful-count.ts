@@ -5,9 +5,9 @@ import { db } from '@hackathons-forum/db/node'
 
 export const command: SlashCommand = {
   data: new SlashCommandBuilder()
-    .setName('refresh-answer-count')
+    .setName('refresh-useful-count')
     .setDescription(
-      'Refreshes the count of answers for every user (expensive call so only use it if really necessary)',
+      'Refreshes the count of useful messages for every user (expensive call so only use it if really necessary)',
     )
     .setDMPermission(false)
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
@@ -39,7 +39,7 @@ export const command: SlashCommand = {
         embeds: [
           {
             title: '✅ Success!',
-            description: 'The answer count of the users has been updated',
+            description: 'The useful message count of the users has been updated',
             color: Colors.Green,
           },
         ],

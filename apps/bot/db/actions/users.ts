@@ -162,10 +162,10 @@ export const removeFullPointsFromUser = async (
   trx: TransactionDB | KyselyDB = db,
 ) => updatePointsBySet(userId, 0, trx)
 
-export const getCorrectAnswersCount = (userId: string) => {
+export const getUsefulMessagesCount = (userId: string) => {
   return db
     .selectFrom('users')
     .where('snowflakeId', '=', userId)
-    .select(['answersCount'])
+    .select(['usefulMessagesCount'])
     .executeTakeFirst()
 }
