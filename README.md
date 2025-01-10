@@ -6,7 +6,7 @@
 
 <p align="center">The Hackathons Canada Discord server indexed in the web</p>
 
-##### Note: this project was forked from [nextjs-forum](https://github.com/rafaelalmeidatk/nextjs-forum) and all associated credit belongs e
+##### Note: this project was forked from [nextjs-forum](https://github.com/rafaelalmeidatk/nextjs-forum) and all associated credit belongs exclusively to them
 
 ## Getting Started
 
