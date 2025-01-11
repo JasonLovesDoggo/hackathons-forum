@@ -12,7 +12,6 @@ type MessageProps = {
   snowflakeId: string
   content: string
   isFirstRow: boolean
-  reply?: Reply | 'deleted'
   author: {
     username: string
     avatarUrl: string
@@ -32,7 +31,6 @@ export const Message = ({
   author,
   createdAt,
   attachments,
-  reply,
 }: MessageProps) => {
   const createdAtTimes = buildPostTimeValues(createdAt)
 
@@ -40,12 +38,6 @@ export const Message = ({
     <MessageWrapper snowflakeId={snowflakeId}>
       <div id={`message-${snowflakeId}`} className="group">
         <div className="pointer-events-none flex w-full grow-0 flex-col items-stretch justify-start gap-1 md:gap-0 p-2 [&>*]:pointer-events-auto">
-          {reply &&
-            (typeof reply === 'string' ? (
-              <DeletedReply />
-            ) : (
-              <MessageReply reply={reply} />
-            ))}
           <div className="flex flex-row">
             <div className="flex w-[50px] shrink-0 items-start justify-start sm:w-[60px]">
               {isFirstRow ? (

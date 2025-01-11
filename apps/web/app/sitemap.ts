@@ -8,7 +8,7 @@ export const revalidate = 21600
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await db
     .selectFrom('hackathons')
-    .select(['snowflakeId', 'lastActiveAt'])
+    .select(['id', 'lastActiveAt'])
     .where('isIndexed', '=', true)
     .limit(50_000) // we will probably need to chunk the sitemap in the future
     .execute()
@@ -21,7 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     ...posts.map((p) => {
       return {
-        url: `${getBaseUrl()}/post/${p.snowflakeId}`,
+        url: `${getBaseUrl()}/post/${p.id}`,
         changeFrequency: 'weekly',
         priority: 0.9,
         lastModified: p.lastActiveAt,

@@ -15,7 +15,6 @@ type GroupedMessages<T> = Array<{
 
 export const groupMessagesByUser = <T extends RequiredMessageFields>(
   messages: T[],
-  answerId: string | null = null,
 ) => {
   return messages.reduce<GroupedMessages<T>>((acc, message) => {
     const lastGroup = acc[acc.length - 1]
@@ -44,14 +43,6 @@ export const groupMessagesByUser = <T extends RequiredMessageFields>(
     }
 
     if (message.replyToMessageId) {
-      return addToNewGroup()
-    }
-
-    // Break the group if this or the previous message is the post answer (this will isolate it)
-    if (
-      answerId &&
-      (message.snowflakeId === answerId || lastMessage.snowflakeId === answerId)
-    ) {
       return addToNewGroup()
     }
 
