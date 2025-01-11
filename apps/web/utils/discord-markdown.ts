@@ -23,7 +23,7 @@ const fetchChannel = cache((channelId: string) => {
 
 const fetchPost = cache((postId: string) => {
   return db
-    .selectFrom('posts')
+    .selectFrom('hackathons')
     .select(['snowflakeId', 'title'])
     .where('snowflakeId', '=', postId)
     .executeTakeFirst()

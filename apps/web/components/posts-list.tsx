@@ -13,14 +13,14 @@ const getPostsByPage = async (pageNumber: number) => {
   const offset = (pageNumber - 1) * limit
 
   return await db
-    .selectFrom('posts')
-    .innerJoin('users', 'users.snowflakeId', 'posts.userId')
-    .leftJoin('messages', 'messages.snowflakeId', 'posts.answerId')
+    .selectFrom('hackathons')
+    .innerJoin('users', 'users.snowflakeId', 'hackathons.userId')
+    .leftJoin('messages', 'messages.snowflakeId', 'hackathons.answerId')
     .select([
-      'posts.id',
-      'posts.snowflakeId',
-      'posts.title',
-      'posts.createdAt',
+      'hackathons.id',
+      'hackathons.snowflakeId',
+      'hackathons.title',
+      'hackathons.createdAt',
       'users.username',
       'users.avatarUrl as userAvatar',
       sql<boolean>`messages.id is not null`.as('hasAnswer'),
@@ -28,8 +28,8 @@ const getPostsByPage = async (pageNumber: number) => {
         eb
           .selectFrom('messages')
           .select(eb.fn.countAll<string>().as('count'))
-          .where('messages.postId', '=', eb.ref('posts.snowflakeId'))
-          .where('messages.snowflakeId', '!=', eb.ref('posts.snowflakeId'))
+          .where('messages.postId', '=', eb.ref('hackathons.snowflakeId'))
+          .where('messages.snowflakeId', '!=', eb.ref('hackathons.snowflakeId'))
           .as('messagesCount'),
     ])
     .where('isIndexed', '=', true)

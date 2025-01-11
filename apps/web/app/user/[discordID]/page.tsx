@@ -56,11 +56,11 @@ const getUserData = async (discordID: string) => {
 const getUserPosts = async (discordID: string) => {
   // First query to get posts
   const posts = await db
-    .selectFrom('posts')
-    .innerJoin('messages', 'posts.answerId', 'messages.snowflakeId')
-    .select(['posts.id'])
+    .selectFrom('hackathons')
+    .innerJoin('messages', 'hackathons.answerId', 'messages.snowflakeId')
+    .select(['hackathons.id'])
     .where('messages.userId', '=', discordID)
-    .orderBy('posts.createdAt', 'desc')
+    .orderBy('hackathons.createdAt', 'desc')
     .limit(5)
     .execute()
 
@@ -71,15 +71,15 @@ const getUserPosts = async (discordID: string) => {
   }
   // Second query to get additional details for the posts
   return await db
-    .selectFrom('posts')
-    .where('posts.id', 'in', postIds)
-    .innerJoin('users', 'users.snowflakeId', 'posts.userId')
-    .leftJoin('messages', 'messages.snowflakeId', 'posts.answerId')
+    .selectFrom('hackathons')
+    .where('hackathons.id', 'in', postIds)
+    .innerJoin('users', 'users.snowflakeId', 'hackathons.userId')
+    .leftJoin('messages', 'messages.snowflakeId', 'hackathons.answerId')
     .select([
-      'posts.id',
-      'posts.snowflakeId',
-      'posts.title',
-      'posts.createdAt',
+      'hackathons.id',
+      'hackathons.snowflakeId',
+      'hackathons.title',
+      'hackathons.createdAt',
       'users.username',
       'users.avatarUrl as userAvatar',
       sql<boolean>`messages.id is not null`.as('hasAnswer'),
@@ -87,11 +87,11 @@ const getUserPosts = async (discordID: string) => {
         eb
           .selectFrom('messages')
           .select(eb.fn.countAll<string>().as('count'))
-          .where('messages.postId', '=', eb.ref('posts.snowflakeId'))
-          .where('messages.snowflakeId', '!=', eb.ref('posts.snowflakeId'))
+          .where('messages.postId', '=', eb.ref('hackathons.snowflakeId'))
+          .where('messages.snowflakeId', '!=', eb.ref('hackathons.snowflakeId'))
           .as('messagesCount') as any, // Ensure the return type matches AliasedSelectQueryBuilder
     ])
-    .orderBy('posts.createdAt', 'desc')
+    .orderBy('hackathons.createdAt', 'desc')
     .execute()
 }
 

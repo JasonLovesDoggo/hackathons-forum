@@ -19,7 +19,7 @@ import Link from 'next/link'
 
 const isPostIndexed = async (snowflakeId: string) => {
   const post = await db
-    .selectFrom('posts')
+    .selectFrom('hackathons')
     .select('isIndexed')
     .where('snowflakeId', '=', snowflakeId)
     .executeTakeFirst()
@@ -29,15 +29,15 @@ const isPostIndexed = async (snowflakeId: string) => {
 
 const getPost = async (snowflakeId: string) => {
   return await db
-    .selectFrom('posts')
-    .innerJoin('users', 'users.snowflakeId', 'posts.userId')
-    .innerJoin('channels', 'channels.snowflakeId', 'posts.channelId')
+    .selectFrom('hackathons')
+    .innerJoin('users', 'users.snowflakeId', 2)
+    .innerJoin('channels', 'channels.snowflakeId', 'hackathons.channelId')
     .select([
-      'posts.id',
-      'posts.snowflakeId',
-      'posts.title',
-      'posts.createdAt',
-      'posts.answerId',
+      'hackathons.id',
+      'hackathons.snowflakeId',
+      'hackathons.title',
+      'hackathons.createdAt',
+      'hackathons.answerId',
       'users.username',
       'users.isPrivate as userisPrivate',
       'users.avatarUrl as userAvatar',
@@ -47,10 +47,10 @@ const getPost = async (snowflakeId: string) => {
         eb
           .selectFrom('messages')
           .select(eb.fn.countAll<number>().as('count'))
-          .where('messages.postId', '=', eb.ref('posts.snowflakeId'))
+          .where('messages.postId', '=', eb.ref('hackathons.snowflakeId'))
           .as('messagesCount'),
     ])
-    .where('posts.snowflakeId', '=', snowflakeId)
+    .where('hackathons.snowflakeId', '=', snowflakeId)
     .executeTakeFirst()
 }
 
