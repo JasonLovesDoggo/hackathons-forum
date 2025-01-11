@@ -12,6 +12,7 @@ export const command: SlashCommand = {
     .setDescription(
       'Refreshes the last active time for every post (expensive call so only use it if really necessary)',
     )
+
     .setDMPermission(false)
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
@@ -26,39 +27,39 @@ export const command: SlashCommand = {
       log('Loading all posts with dates...')
 
       // update posts with lastmod time
-      const posts = await db
-        .selectFrom('posts')
+      const hackathons = await db
+        .selectFrom('hackathons')
         .select([
-          'posts.snowflakeId',
-          sql<Date>`MAX(IFNULL(posts.editedAt, posts.createdAt))`.as(
+          'hackathons.snowflakeId',
+          sql<Date>`MAX(IFNULL(hackathons.editedAt, hackathons.createdAt))`.as(
             'lastModTime',
           ),
           sql<Date>`MAX(IFNULL(messages.editedAt, messages.createdAt))`.as(
             'lastMessageModTime',
           ),
         ])
-        .leftJoin('messages', 'posts.snowflakeId', 'messages.postId')
-        .groupBy('posts.snowflakeId')
+        .leftJoin('messages', 'hackathons.snowflakeId', 'messages.postId')
+        .groupBy('hackathons.snowflakeId')
         .execute()
 
-      log('Loaded %d posts, starting transaction chunks', posts.length)
+      log('Loaded %d posts, starting transaction chunks', hackathons.length)
 
       const chunkSize = 100
-      for (let i = 0; i < posts.length; i += chunkSize) {
-        const chunk = posts.slice(i, i + chunkSize)
+      for (let i = 0; i < hackathons.length; i += chunkSize) {
+        const chunk = hackathons.slice(i, i + chunkSize)
 
         log('Executing transaction chunk %d', i / chunkSize)
 
         await db.transaction().execute(async (trx) => {
-          for (const post of chunk) {
+          for (const hackathon of chunk) {
             const lastActive =
-              post.lastMessageModTime > post.lastModTime
-                ? post.lastMessageModTime
-                : post.lastModTime
+              hackathon.lastMessageModTime > hackathon.lastModTime
+                ? hackathon.lastMessageModTime
+                : hackathon.lastModTime
 
             await trx
-              .updateTable('posts')
-              .where('posts.snowflakeId', '=', post.snowflakeId)
+              .updateTable('hackathons')
+              .where('hackathons.snowflakeId', '=', hackathon.snowflakeId)
               .set({ lastActiveAt: lastActive })
               .execute()
           }

@@ -1,7 +1,7 @@
 import { Message, PartialMessage } from 'discord.js'
-import { db, sql } from '@hackathons-forum/db/node'
+import { db } from '@hackathons-forum/db/node'
 import { addPointsToUser, removePointsFromUser, syncUser } from './users.js'
-import { syncChannel, syncMessageChannel } from './channels.js'
+import { syncChannel } from './channels.js'
 import { updatePostLastActive } from './posts.js'
 import { tryToSetRegularMemberRole } from '../../lib/points.js'
 
@@ -12,7 +12,7 @@ export const syncMessage = async (message: Message) => {
 
   await Promise.all([
     syncUser(message.author, authorAsGuildMember),
-    syncMessageChannel(message.channel),
+    syncChannel(message.channel),
     ...message.mentions.channels.mapValues((c) => syncChannel(c)),
     ...(message.mentions.members
       ? message.mentions.members.mapValues((m) => syncUser(m.user, m))
@@ -93,66 +93,66 @@ export const deleteMessage = async (
     }
   })
 }
-
-export const markMessageAsSolution = async (
-  messageId: string | null,
-  postId: string,
-) => {
-  await db.transaction().execute(async (trx) => {
-    const currentAnswer = await trx
-      .selectFrom('posts')
-      .innerJoin('messages', 'messages.snowflakeId', 'posts.answerId')
-      .select('messages.userId')
-      .where('posts.snowflakeId', '=', postId)
-      .executeTakeFirst()
-
-    if (currentAnswer) {
-      await trx
-        .updateTable('users')
-        .set((eb) => ({
-          answersCount: sql`greatest(${eb.ref('answersCount')} - 1, 0)`,
-        }))
-        .where('snowflakeId', '=', currentAnswer.userId)
-        .execute()
-
-      await removePointsFromUser(currentAnswer.userId, 'answer', trx)
-    }
-
-    if (messageId === null) {
-      await trx
-        .updateTable('posts')
-        .set({ answerId: null })
-        .where('snowflakeId', '=', postId)
-        .executeTakeFirst()
-
-      await updatePostLastActive(postId, trx)
-
-      return
-    }
-
-    const newAnswer = await trx
-      .selectFrom('messages')
-      .select('userId')
-      .where('snowflakeId', '=', messageId)
-      .executeTakeFirst()
-
-    if (newAnswer) {
-      await trx
-        .updateTable('posts')
-        .set({ answerId: messageId })
-        .where('snowflakeId', '=', postId)
-        .executeTakeFirst()
-
-      await trx
-        .updateTable('users')
-        .set((eb) => ({
-          answersCount: sql`${eb.ref('answersCount')} + 1`,
-        }))
-        .where('snowflakeId', '=', newAnswer.userId)
-        .execute()
-
-      await addPointsToUser(newAnswer.userId, 'answer', trx)
-      await updatePostLastActive(postId, trx)
-    }
-  })
-}
+//
+// export const markMessageAsSolution = async (
+//   messageId: string | null,
+//   postId: string,
+// ) => {
+//   await db.transaction().execute(async (trx) => {
+//     const currentAnswer = await trx
+//       .selectFrom('hackathons')
+//       .innerJoin('messages', 'messages.snowflakeId', 'hackathons.answerId')
+//       .select('messages.userId')
+//       .where('hackathons.snowflakeId', '=', postId)
+//       .executeTakeFirst()
+//
+//     if (currentAnswer) {
+//       await trx
+//         .updateTable('users')
+//         .set((eb) => ({
+//           answersCount: sql`greatest(${eb.ref('answersCount')} - 1, 0)`,
+//         }))
+//         .where('snowflakeId', '=', currentAnswer.userId)
+//         .execute()
+//
+//       await removePointsFromUser(currentAnswer.userId, 'answer', trx)
+//     }
+//
+//     if (messageId === null) {
+//       await trx
+//         .updateTable('hackathons')
+//         .set({ answerId: null })
+//         .where('snowflakeId', '=', postId)
+//         .executeTakeFirst()
+//
+//       await updatePostLastActive(postId, trx)
+//
+//       return
+//     }
+//
+//     const newAnswer = await trx
+//       .selectFrom('messages')
+//       .select('userId')
+//       .where('snowflakeId', '=', messageId)
+//       .executeTakeFirst()
+//
+//     if (newAnswer) {
+//       await trx
+//         .updateTable('hackathons')
+//         .set({ answerId: messageId })
+//         .where('snowflakeId', '=', postId)
+//         .executeTakeFirst()
+//
+//       await trx
+//         .updateTable('users')
+//         .set((eb) => ({
+//           answersCount: sql`${eb.ref('answersCount')} + 1`,
+//         }))
+//         .where('snowflakeId', '=', newAnswer.userId)
+//         .execute()
+//
+//       await addPointsToUser(newAnswer.userId, 'answer', trx)
+//       await updatePostLastActive(postId, trx)
+//     }
+//   })
+// }

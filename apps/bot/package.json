@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development bun --hot index.ts",
     "build": "tsc --build",
-    "start": "cross-env NODE_ENV=production node build/index.js",
+    "start": "node_modules/cross-env NODE_ENV=production node build/index.js",
     "dev:register-commands": "bun ./register-commands.ts",
     "register-commands": "bun ./register-commands.ts"
   },

@@ -1,3 +1,5 @@
-import * as markAnswer from './mark-answer.js'
+// import * as markAnswer from './mark-answer.js'
 
-export const contextMenuCommands = [markAnswer.command]
+export const contextMenuCommands: any[] = [
+  /*markAnswer.command*/
+]

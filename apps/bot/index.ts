@@ -1,18 +1,25 @@
-import { Client, Colors, Events, GatewayIntentBits, Partials } from 'discord.js'
+import {
+  Client,
+  Colors,
+  Events,
+  GatewayIntentBits,
+  Partials,
+  TextChannel,
+} from 'discord.js'
 import { dedent } from 'ts-dedent'
 import { env } from './env.js'
 import { deleteMessage, syncMessage } from './db/actions/messages.js'
 import { deletePost, syncPost } from './db/actions/posts.js'
 import { baseLog } from './log.js'
 import {
-  isMessageInForumChannel,
+  HackathonChannel,
+  isChannelSupported,
   isMessageSupported,
-  isThreadInForumChannel,
-  isThreadSupported,
+  shouldProcessChannel,
 } from './utils.js'
 import { contextMenuCommands } from './commands/context/index.js'
 import { slashCommands } from './commands/slash/index.js'
-import { addPointsToUser, syncUser } from './db/actions/users.js'
+import { syncUser } from './db/actions/users.js'
 
 const client = new Client({
   intents: [
@@ -29,58 +36,51 @@ client.once(Events.ClientReady, (c) => {
 })
 
 client.on(Events.MessageCreate, async (message) => {
-  if (
-    !isMessageInForumChannel(message.channel) ||
-    !isMessageSupported(message)
-  ) {
+  if (!isChannelSupported(message.channel) || !isMessageSupported(message)) {
     return
   }
 
   try {
     await syncMessage(message)
-    baseLog('Created a new message in post %s', message.channelId)
+    baseLog('Created a new message in channel %s', message.channelId)
   } catch (err) {
     console.error('Failed to create message:', err)
   }
 })
 
 client.on(Events.MessageUpdate, async (_, newMessage) => {
-  if (!isMessageInForumChannel(newMessage.channel)) return
+  if (!isChannelSupported(newMessage.channel)) return
 
   try {
     const message = await newMessage.fetch()
     if (!isMessageSupported(message)) return
 
     await syncMessage(message)
-    baseLog('Updated a message in post %s', message.channelId)
+    baseLog('Updated a message in channel %s', message.channelId)
   } catch (err) {
     console.error('Failed to update message:', err)
   }
 })
 
 client.on(Events.MessageDelete, async (message) => {
-  if (!isMessageInForumChannel(message.channel)) return
+  if (!shouldProcessChannel(message.channel)) return
 
   try {
     await deleteMessage(message)
-    baseLog('Deleted a message in post %s', message.channelId)
+    baseLog('Deleted a message in channel %s', message.channelId)
   } catch (err) {
     console.error('Failed to delete message:', err)
   }
 })
 
-client.on(Events.ThreadCreate, async (thread) => {
-  if (!isThreadInForumChannel(thread) || !isThreadSupported(thread)) return
+client.on(Events.ChannelCreate, async (channel) => {
+  if (!shouldProcessChannel(channel)) return
 
   try {
-    await syncPost(thread)
-    baseLog('Created a new post (%s)', thread.id)
+    await syncPost(channel as HackathonChannel)
+    baseLog('Created a new post (%s)', channel.id)
 
-    if (thread.ownerId) {
-      await addPointsToUser(thread.ownerId, 'question')
-    }
-
-    await thread.send({
+    await (channel as HackathonChannel).send({
       embeds: [
         {
           title: 'Hackathon Indexed!',
@@ -96,36 +96,34 @@ client.on(Events.ThreadCreate, async (thread) => {
           image: {
             url: 'https://cdn.discordapp.com/attachments/1043615796787683408/1117191182133501962/image.png',
           },
-          url: `${env.WEB_URL}/post/${thread.id}`,
+          url: `${env.WEB_URL}/post/${channel.id}`,
         },
       ],
     })
   } catch (err) {
-    console.error('Failed to create thread:', err)
+    console.error('Failed to create channel:', err)
   }
 })
 
-client.on(Events.ThreadUpdate, async (_, newThread) => {
-  if (!isThreadInForumChannel(newThread) || !isThreadSupported(newThread)) {
-    return
-  }
+client.on(Events.ChannelUpdate, async (_, updatedChannel) => {
+  if (!shouldProcessChannel(updatedChannel)) return
 
   try {
-    await syncPost(newThread)
-    baseLog('Updated a post (%s)', newThread.id)
+    await syncPost(updatedChannel as HackathonChannel)
+    baseLog('Updated a channel (%s)', updatedChannel.id)
   } catch (err) {
-    console.error('Failed to update thread:', err)
+    console.error('Failed to update channel:', err)
   }
 })
 
-client.on(Events.ThreadDelete, async (thread) => {
-  if (!isThreadInForumChannel(thread) || !isThreadSupported(thread)) return
+client.on(Events.ChannelDelete, async (channel) => {
+  if (!shouldProcessChannel(channel)) return
 
   try {
-    await deletePost(thread)
-    baseLog('Deleted a post (%s)', thread.id)
+    await deletePost(channel as HackathonChannel)
+    baseLog('Deleted a hackathon (%s)', channel.id)
   } catch (err) {
-    console.error('Failed to delete thread:', err)
+    console.error('Failed to delete hackathon channel:', err)
   }
 })
 

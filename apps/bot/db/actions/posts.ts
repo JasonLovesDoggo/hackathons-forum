@@ -1,27 +1,23 @@
-import { AnyThreadChannel } from 'discord.js'
 import { db, KyselyDB, TransactionDB } from '@hackathons-forum/db/node'
 import { revalidateHomePage, revalidatePost } from '../../revalidate.js'
-import { removePointsFromUser } from './users.js'
+import { HackathonChannel } from '../../utils.js'
 
-export const syncPost = async (thread: AnyThreadChannel) => {
+export const syncPost = async (channel: HackathonChannel) => {
   const now = new Date()
   await db
-    .insertInto('posts')
+    .insertInto('hackathons')
     .values({
-      snowflakeId: thread.id,
-      title: thread.name,
-      createdAt: thread.createdAt ?? now,
-      editedAt: thread.createdAt ?? now,
-      isLocked: Boolean(thread.locked),
-      userId: thread.ownerId,
-      channelId: thread.parentId,
+      snowflakeId: channel.id,
+      title: channel.name,
+      createdAt: channel.createdAt ?? now,
+      editedAt: channel.createdAt ?? now,
+      channelId: channel.parentId,
       lastActiveAt: now,
     })
     .onConflict((oc) =>
       oc.column('snowflakeId').doUpdateSet({
-        title: thread.name,
+        title: channel.name,
         editedAt: now,
-        isLocked: Boolean(thread.locked),
         lastActiveAt: now,
       }),
     )
@@ -30,14 +26,13 @@ export const syncPost = async (thread: AnyThreadChannel) => {
   await revalidateHomePage()
 }
 
-export const deletePost = async (thread: AnyThreadChannel<boolean>) => {
+export const deletePost = async (channel: HackathonChannel) => {
   await db.transaction().execute(async (trx) => {
-    await trx.deleteFrom('posts').where('snowflakeId', '=', thread.id).execute()
-    await trx.deleteFrom('messages').where('postId', '=', thread.id).execute()
-
-    if (thread.ownerId) {
-      await removePointsFromUser(thread.ownerId, 'question', trx)
-    }
+    await trx
+      .deleteFrom('hackathons')
+      .where('snowflakeId', '=', channel.id)
+      .execute()
+    await trx.deleteFrom('messages').where('postId', '=', channel.id).execute()
   })
 }
 
@@ -46,22 +41,18 @@ export const updatePostLastActive = async (
   trx: TransactionDB | KyselyDB = db,
 ) => {
   await trx
-    .updateTable('posts')
+    .updateTable('hackathons')
     .where('snowflakeId', '=', postId)
     .set({ lastActiveAt: new Date() })
     .execute()
 }
 
-export const unindexPost = async (channel: AnyThreadChannel<boolean>) => {
+export const unindexPost = async (channel: HackathonChannel) => {
   await db
-    .updateTable('posts')
+    .updateTable('hackathons')
     .where('snowflakeId', '=', channel.id)
     .set({ isIndexed: false })
     .execute()
-
-  if (channel.ownerId) {
-    await removePointsFromUser(channel.ownerId, 'question')
-  }
 
   await revalidatePost(channel.id)
 }

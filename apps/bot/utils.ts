@@ -8,6 +8,7 @@ import {
   InteractionResponse,
   Message,
   MessageContextMenuCommandInteraction,
+  TextChannel,
 } from 'discord.js'
 import { env } from './env.js'
 import {
@@ -16,34 +17,38 @@ import {
   syncUser,
 } from './db/actions/users.js'
 import { tryToSetRegularMemberRole } from './lib/points.js'
-import { unindexPost } from './db/actions/posts.js'
 
 const START_INDEXING_AFTER = 1686438000000
+export class HackathonChannel extends TextChannel {}
 
-export const isMessageInCategoryChannel = (
-  channel: Channel,
-): channel is Channel => {
-  return (
-    channel.isTextBased() &&
-    channel.parentId !== null &&
-    env.INDEXABLE_CATEGORY_IDS.includes(channel.parentId)
-  )
-}
-
-export const isMessageSupported = (message: Message) => {
+/**
+ * Checks if a message is supported for indexing.
+ * A message is supported if it is not from a bot, not a system message,
+ * and was created after the specified indexing start time.
+ *
+ * @param {Message} message - The message to check.
+ * @returns {boolean} - True if the message is supported, false otherwise.
+ */
+export const isMessageSupported = (message: Message): boolean => {
   const isIndexable = message.createdAt.getTime() > START_INDEXING_AFTER
   return !message.author.bot && !message.system && isIndexable
 }
 
-export const isThreadSupported = (channel: Channel) => {
+export const shouldProcessChannel = (channel: Channel): boolean => {
+  return isChannelSupported(channel) && isChannelInHackathonCategory(channel)
+}
+
+export const isChannelSupported = (channel: Channel) => {
   return (
+    channel.type !== ChannelType.GuildText &&
     channel.createdAt !== null &&
     channel.createdAt.getTime() > START_INDEXING_AFTER
   )
 }
 
-export const isThreadInForumChannel = (channel: Channel) => {
+export const isChannelInHackathonCategory = (channel: Channel) => {
   return (
+    channel.type === ChannelType.GuildText &&
     channel.parentId !== null &&
     env.INDEXABLE_CATEGORY_IDS.includes(channel.parentId)
   )
@@ -83,46 +88,6 @@ export const replyWithEmbedError = (
   })
 }
 
-export const LockPostWithReason = async (
-  interaction: ChatInputCommandInteraction,
-  reason: string,
-) => {
-  if (!interaction.channel?.isThread()) {
-    await replyWithEmbedError(interaction, {
-      description: 'This command can only be used in a thread/forum post',
-    })
-    return
-  }
-
-  const mainChannel = interaction.channel.parent
-  if (mainChannel && mainChannel.type === ChannelType.GuildForum) {
-    const lockedTagId = mainChannel.availableTags.find((t) =>
-      t.name.includes('Locked'),
-    )?.id
-
-    if (lockedTagId) {
-      const newTags = Array.from(
-        new Set([...interaction.channel.appliedTags, lockedTagId]),
-      )
-      interaction.channel.setAppliedTags(newTags)
-    }
-  }
-
-  await interaction.reply({ content: 'Ok!', ephemeral: true })
-
-  await interaction.channel.setLocked(true)
-  await interaction.channel.send({
-    embeds: [
-      {
-        color: Colors.Blue,
-        title: '🔒 Post Locked',
-        description: reason,
-      },
-    ],
-  })
-  await unindexPost(interaction.channel)
-}
-
 export const modifyRegularMemberRoles = async (
   interaction: ChatInputCommandInteraction,
   shouldAddPoints: boolean,
@@ -150,51 +115,4 @@ export const modifyRegularMemberRoles = async (
   await tryToSetRegularMemberRole(guildMember, true)
 
   await interaction.editReply({ content: 'Done!' })
-}
-
-export const checkInvalidAnswer = async (
-  interaction:
-    | ChatInputCommandInteraction
-    | MessageContextMenuCommandInteraction,
-) => {
-  if (!interaction.channel || !isMessageInCategoryChannel(interaction.channel)) {
-    await replyWithEmbedError(interaction, {
-      description: 'This command can only be used in a supported forum channel',
-    })
-
-    return
-  }
-  const mainChannel = interaction.channel.parent
-
-  if (!mainChannel) {
-    await replyWithEmbedError(interaction, {
-      description:
-        'Could not find the parent channel, please try again later. If this issue persists, contact a staff member',
-    })
-
-    return
-  }
-
-  if (mainChannel.type !== ChannelType.GuildForum) {
-    await interaction.reply({
-      ephemeral: true,
-      content: 'The parent channel is not a forum channel',
-    })
-
-    return
-  }
-
-  const interactionMember = await interaction.guild?.members.fetch(
-    interaction.user,
-  )
-  if (!interactionMember) {
-    await replyWithEmbedError(interaction, {
-      description:
-        'Could not find your info in the server, please try again later. If this issue persists, contact a staff member',
-    })
-
-    return
-  }
-  const channel = interaction.channel
-  return { channel, interactionMember, mainChannel }
 }
