@@ -6,8 +6,8 @@
   "scripts": {
     "build": "tsc --build",
     "migrate": "bun ./migrate.ts",
-    "migrate:down": "cross-env MIGRATE_OP=down bun ./migrate.ts",
-    "migrate:list": "cross-env MIGRATE_OP=list bun ./migrate.ts",
+    "migrate:down": "node_modules/cross-env MIGRATE_OP=down bun ./migrate.ts",
+    "migrate:list": "node_modules/cross-env MIGRATE_OP=list bun ./migrate.ts",
     "db-codegen": "kysely-codegen --dialect postgres --out-file ./schema.ts",
     "lint": "eslint ."
   },

@@ -42,18 +42,17 @@ export interface Messages {
   userId: string
 }
 
-export interface Posts {
-  answerId: string | null
+export interface Hackathons {
   channelId: string | null
   createdAt: Timestamp
   editedAt: Timestamp | null
   id: Generated<string>
   isIndexed: Generated<boolean>
-  isLocked: boolean
   lastActiveAt: Generated<Timestamp>
   snowflakeId: string
   title: string
-  userId: string | null
+  archivedAt: Timestamp | null
+  archivedByUserId: string | null
 }
 
 export interface Users {
@@ -74,6 +73,6 @@ export interface DB {
   channels: Channels
   categories: Categories
   messages: Messages
-  posts: Posts
+  hackathons: Hackathons
   users: Users
 }

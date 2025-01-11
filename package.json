@@ -17,13 +17,16 @@
   },
   "devDependencies": {
     "@hackathons-forum/eslint-config-custom": "workspace:*",
+    "cross-env": "^7.0.3",
     "husky": "^8.0.3",
+    "kysely-ctl": "^0.10.1",
     "lint-staged": "^15.1.0",
     "prettier": "^3.1.0",
     "turbo": "^2.3.3"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0",
+    "pnpm": ">=8.11.0"
   },
   "lint-staged": {
     "*.{js,ts,tsx,md,json}": "prettier --write"
@@ -35,5 +38,5 @@
     "packages/*",
     "apps/*"
   ],
-  "packageManager": "bun@1.1.30"
+  "packageManager": "pnpm@9.10.0"
 }
