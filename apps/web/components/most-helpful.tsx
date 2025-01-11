@@ -11,7 +11,6 @@ const getMostHelpfulUsers = async () => {
       'avatarUrl',
       'answersCount',
       'isPrivate',
-      'snowflakeId as userID',
     ])
     .orderBy('answersCount', 'desc')
     .orderBy('id', 'desc')
@@ -40,7 +39,7 @@ export const MostHelpful = async () => {
               {user.isPrivate ? (
                 <Link
                   className="opacity-90 text-white line-clamp-1 max-w-[200px]"
-                  href={`/user/${user.userID}`}
+                  href={`/user/${user.id}`}
                 >
                   {user.username}
                 </Link>
